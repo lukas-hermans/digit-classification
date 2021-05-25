@@ -1,0 +1,34 @@
+\input{preamble.tex}
+
+\begin{document}
+	
+	\fontdimen2\font=0.7ex% inter word space
+
+	\input{titlepage.tex}
+	\tableofcontents
+	\thispagestyle{empty}
+	
+	\pagestyle{fancy}
+	\fancyhf{}
+	\rhead{Lukas Hermans}
+	\lhead{Digit Classification with Kernel Perceptron}
+	\cfoot{\thepage}
+	
+	\newpage
+	\addcontentsline{toc}{section}{Declaration}
+	\section*{Declaration}
+	\input{declaration.tex}
+	
+	\newpage
+	\section{Introduction}
+	\input{chapter1.tex}
+	
+	\newpage
+	\section{test}
+	fdjsj a \cite{KaggleData} a sdf asd f
+
+	\newpage
+	\addcontentsline{toc}{section}{References}
+	\printbibliography
+	
+\end{document}
