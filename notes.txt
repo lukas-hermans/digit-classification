@@ -1,0 +1,10 @@
+Introduction:
+- data: grayscale images of digits from 0-9 with 784 pixels (60000 training points, 10000 test points), examplary picture of digits
+
+Theory:
+
+
+
+Code: 
+- add best predictor and mean predictor for binary predictors 
+- prepare class for multiclass prediction

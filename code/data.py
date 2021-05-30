@@ -16,8 +16,9 @@ def load_data(path):
     Returns
     -------
     feats : numpy.ndarray of shape (n, p)
-        Features, where n is the number of examples 
+        Features, where n is the number of examples
         and p the number of features.
+        First feature is always 1 to implement bias.
     label : numpy.ndarray of shape (n, 1)
         Label.
 
@@ -29,14 +30,59 @@ def load_data(path):
 
     # add extra feature with value 1 for non-homogeneous hyperplane
     extra_feat = np.array([np.ones(len(feats))])
-    feats = np.concatenate((feats, extra_feat.T), axis=1)
+    feats = np.concatenate((extra_feat.T, feats), axis=1)
 
     label = data[:, 0]
 
     return feats, label
 
 
-def plot_examples(feats, path_figs):
+def make_binary(label, which):
+    """
+    Transforms label in one vs. all encoding for binary classification.
+
+    Parameters
+    ----------
+    label : numpy.ndarray of shape (n, 1)
+        Label.
+    which : int
+        Specifies which class is interpreted as 1.
+        All other classes are set to -1.
+
+    Returns
+    -------
+    binary_label : numpy.ndarray of shape (n, 1)
+        Binary label.
+
+    """
+
+    binary_label = label.copy()
+
+    binary_label[np.argwhere(label == which)] = 1
+    binary_label[np.argwhere(label != which)] = -1
+
+    return binary_label
+
+
+def plot_examples(feats, path):
+    """
+    Plot the images from the features (each feature should be a brightness
+                                       value between 0 and 255).
+
+    Parameters
+    ----------
+    feats : numpy.ndarray of shape (n, p)
+        Features, where n is the number of examples
+        and p the number of features.
+    path : str
+        Path where the image should be saved
+        (e.g., "figures/plot_examples.pdf").
+
+    Returns
+    -------
+    None.
+
+    """
 
     n = np.shape(feats)[0]
 
@@ -55,5 +101,4 @@ def plot_examples(feats, path_figs):
 
     plt.tight_layout()
     plt.subplots_adjust(wspace=0.03, hspace=0)
-    plt.savefig(path_figs + "plot_examples.pdf",
-                bbox_inches="tight", pad_inches=0.0)
+    plt.savefig(path, bbox_inches="tight", pad_inches=0.0)
