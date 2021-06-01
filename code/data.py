@@ -18,7 +18,6 @@ def load_data(path):
     feats : numpy.ndarray of shape (n, p)
         Features, where n is the number of examples
         and p the number of features.
-        First feature is always 1 to implement bias.
     label : numpy.ndarray of shape (n, 1)
         Label.
 
@@ -26,13 +25,8 @@ def load_data(path):
 
     data = np.loadtxt(path, skiprows=1, delimiter=",")
 
-    feats = data[:, 1:]
-
-    # add extra feature with value 1 for non-homogeneous hyperplane
-    extra_feat = np.array([np.ones(len(feats))])
-    feats = np.concatenate((extra_feat.T, feats), axis=1)
-
-    label = data[:, 0]
+    feats = data[:1000, 1:]
+    label = data[:1000, 0]
 
     return feats, label
 
@@ -76,7 +70,7 @@ def plot_examples(feats, path):
         and p the number of features.
     path : str
         Path where the image should be saved
-        (e.g., "figures/plot_examples.pdf").
+        (e.g., "figures/").
 
     Returns
     -------
@@ -101,4 +95,5 @@ def plot_examples(feats, path):
 
     plt.tight_layout()
     plt.subplots_adjust(wspace=0.03, hspace=0)
-    plt.savefig(path, bbox_inches="tight", pad_inches=0.0)
+    plt.savefig(path + "plot_examples.pdf",
+                bbox_inches="tight", pad_inches=0.0)
