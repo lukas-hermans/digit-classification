@@ -195,5 +195,52 @@
     \field{journaltitle}{Avtomat. i Telemekh.}
     \field{year}{1967}
   \endentry
+
+  \entry{perceptron1957}{article}{}
+    \name{author}{1}{}{%
+      {{hash=R}{%
+         family={Rosenblatt},
+         familyi={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{R1}
+    \strng{fullhash}{R1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{title}{The Perceptron: A Perceiving and Recognizing Automaton}
+    \field{volume}{85-460-1}
+    \field{journaltitle}{Conrell Aeronautical Laboratory}
+    \field{year}{1957}
+  \endentry
+
+  \entry{multiclass2005}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=XJ}{%
+         family={Xu},
+         familyi={X\bibinitperiod},
+         given={Jianhua},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=ZX}{%
+         family={Zhang},
+         familyi={Z\bibinitperiod},
+         given={Xuegong},
+         giveni={X\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{XJZX1}
+    \strng{fullhash}{XJZX1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{booktitle}{2005 International Conference on Neural Networks and
+  Brain}
+    \verb{doi}
+    \verb 10.1109/ICNNB.2005.1614728
+    \endverb
+    \field{pages}{717\bibrangedash 721}
+    \field{title}{A multiclass kernel perceptron algorithm}
+    \field{volume}{2}
+    \field{year}{2005}
+  \endentry
 \enddatalist
 \endinput
