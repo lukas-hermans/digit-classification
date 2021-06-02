@@ -25,8 +25,8 @@ def load_data(path):
 
     data = np.loadtxt(path, skiprows=1, delimiter=",")
 
-    feats = data[:1000, 1:]
-    label = data[:1000, 0]
+    feats = data[:, 1:]
+    label = data[:, 0]
 
     return feats, label
 
@@ -96,4 +96,37 @@ def plot_examples(feats, path):
     plt.tight_layout()
     plt.subplots_adjust(wspace=0.03, hspace=0)
     plt.savefig(path + "plot_examples.pdf",
+                bbox_inches="tight", pad_inches=0.0)
+
+
+def plot_hist(label, path, file_name):
+    """
+    Plot a histogram of the number of digits.
+
+    Parameters
+    ----------
+    label : numpy.ndarray of shape (n, 1)
+        Label.
+    path : str
+        Path where the image should be saved
+        (e.g., "figures/").
+    file_name : str
+        Name of file with which the image should be saved
+        (e.g., "plot_hist_train.pdf").
+
+    Returns
+    -------
+    None.
+
+    """
+
+    plt.figure(figsize=(10, 4))
+    plt.hist(label, rwidth=0.8, bins=np.arange(-0.5, 10.5), align="mid",
+             color="gray", edgecolor="black", linewidth=1.2)
+    plt.xlabel("digit", size=20)
+    plt.ylabel("frequency", size=20)
+    plt.xticks(np.arange(10), size=20)
+    plt.yticks(size=20)
+    plt.tight_layout()
+    plt.savefig(path + file_name,
                 bbox_inches="tight", pad_inches=0.0)
