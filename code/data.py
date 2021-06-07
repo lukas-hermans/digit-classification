@@ -25,8 +25,8 @@ def load_data(path):
 
     data = np.loadtxt(path, skiprows=1, delimiter=",")
 
-    feats = data[:10000, 1:]
-    label = data[:10000, 0]
+    feats = data[:, 1:]
+    label = data[:, 0]
 
     return feats, label
 

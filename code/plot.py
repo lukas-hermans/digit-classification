@@ -40,6 +40,32 @@ plt.close("all")
 #     plt.savefig(path_figs + save_file[i],
 #                 bbox_inches="tight", pad_inches=0.0)
 
+"""
+    comparison of different predictor types
+"""
+
+# path_results = "./results/"
+# path_figs = "./figures/"
+
+# iteration, training_error = np.loadtxt(path_results + "output_bin.txt",
+#                                        delimiter=",", unpack=True,
+#                                        skiprows=3)
+
+# plt.figure()
+
+# plt.plot(iteration[:], training_error[:],
+#          label=r"final: $\vec{\alpha}_{fin}$",
+#          color="r", linestyle="solid")
+
+# plt.tight_layout()
+# plt.grid()
+# plt.legend()
+# plt.xlabel(r"# iteration")
+# plt.ylabel(r"binary training error $\hat{\ell}_{S^{(a)}}$")
+# plt.tight_layout()
+# plt.savefig(path_figs + "output_bin.pdf",
+#             bbox_inches="tight", pad_inches=0.0)
+
 
 """
     performance
@@ -48,26 +74,57 @@ plt.close("all")
 path_results = "./results/performance/"
 path_figs = "./figures/performance/"
 
-n_epoch = np.arange(1, 11)
-deg = np.arange(1, 7)
+n_epoch = np.arange(1, 21)
+deg = np.arange(1, 6)
 
-for i in n_epoch:
-    data = np.loadtxt(path_results + "performance_n_epoch=" + str(i) +
+# training error
+for i in deg:
+    data = np.loadtxt(path_results + "performance_deg=" + str(i) +
                       ".txt", skiprows=1, delimiter=",")
 
     plt.figure(figsize=(7, 4))
 
-    plt.plot(deg, data[3], label=r"final: $\vec{\alpha}_{fin}$", color="r")
+    plt.plot(n_epoch, data[0], label=r"final: $\vec{\alpha}_{fin}$",
+             color="r", linestyle="solid")
     plt.plot(
-        deg, data[4], label=r"average: $\langle\vec{\alpha}\rangle$", color="b")
+        n_epoch, data[1], label=r"minimizing: $\vec{\alpha}_{min}$",
+        color="b", linestyle="dotted")
     plt.plot(
-        deg, data[5], label=r"minimizing: $\vec{\alpha}_{min}$", color="green")
+        n_epoch, data[2], label=r"average: $\langle\vec{\alpha}\rangle$",
+        color="green", linestyle="dashed")
 
     plt.tight_layout()
     plt.grid()
-    plt.xlabel(r"degree $p$ of polynomial kernel")
+    plt.xlabel(r"$n_{epoch}$")
+    plt.ylabel(r"training error $\hat{\ell}_S$")
+    plt.legend()
+    plt.xticks(np.arange(1, 21))
+    plt.tight_layout()
+    plt.savefig(path_figs + "training_performance_deg=" + str(i),
+                bbox_inches="tight", pad_inches=0.0)
+
+# test error
+for i in deg:
+    data = np.loadtxt(path_results + "performance_deg=" + str(i) +
+                      ".txt", skiprows=1, delimiter=",")
+
+    plt.figure(figsize=(7, 4))
+
+    plt.plot(n_epoch, data[3], label=r"final: $\vec{\alpha}_{fin}$",
+             color="r", linestyle="solid")
+    plt.plot(
+        n_epoch, data[4], label=r"minimizing: $\vec{\alpha}_{min}$",
+        color="b", linestyle="dotted")
+    plt.plot(
+        n_epoch, data[5], label=r"average: $\langle\vec{\alpha}\rangle$",
+        color="green", linestyle="dashed")
+
+    plt.tight_layout()
+    plt.grid()
+    plt.xlabel(r"$n_{epoch}$")
     plt.ylabel(r"test error $\hat{\ell}_D$")
     plt.legend()
+    plt.xticks(np.arange(1, 21))
     plt.tight_layout()
-    plt.savefig(path_figs + "performance_deg=" + str(i),
+    plt.savefig(path_figs + "test_performance_deg=" + str(i),
                 bbox_inches="tight", pad_inches=0.0)
