@@ -2,8 +2,16 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 2
 \BOOKMARK [1][-]{section.2}{Dataset \046 Definitions}{}% 3
 \BOOKMARK [1][-]{section.3}{Theory}{}% 4
-\BOOKMARK [1][-]{section.4}{Implementation \046 Software}{}% 5
-\BOOKMARK [1][-]{section.5}{Results}{}% 6
-\BOOKMARK [1][-]{section.6}{Discussion}{}% 7
-\BOOKMARK [1][-]{section.7}{Conclusion \046 Outlook}{}% 8
-\BOOKMARK [1][-]{section.7}{References}{}% 9
+\BOOKMARK [2][-]{subsection.3.1}{From Multiclass to Binary: One-vs-All Encoding}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.2}{Binary Kernel Perceptron Algorithm}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.3}{Choice of Binary Predictors}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.4}{Multiclass Kernel Perceptron Algorithm}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.5}{Evaluation: Training and Test Error Rate}{section.3}% 9
+\BOOKMARK [1][-]{section.4}{Implementation \046 Software}{}% 10
+\BOOKMARK [1][-]{section.5}{Results}{}% 11
+\BOOKMARK [2][-]{subsection.5.1}{Data Stream: nepoch vs. nsample}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.2}{Example: Choice of Binary Predictors}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.3}{Search for Best Multiclass Classifier}{section.5}% 14
+\BOOKMARK [1][-]{section.6}{Discussion}{}% 15
+\BOOKMARK [1][-]{section.7}{Conclusion \046 Outlook}{}% 16
+\BOOKMARK [1][-]{section.7}{References}{}% 17

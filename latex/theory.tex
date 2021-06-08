@@ -2,16 +2,16 @@ With the definitions from Section~\ref{sec:dataset_definitions} in mind, the pro
 
 %In principal, $\vec{x}$ can be an arbitrary grayscale image that satisfies the vector formalism introduced with Eq.~\ref{eq:vector} the last Section. However, correct predictions are only expected for images that can be - at least to some degree - identified as handwritten digits. The digits may be blurry or barely readable, but the predictor is not trained to handle images that do not show a digit between $0$ and $9$, e.g. a letter. Therefore, if the input image is the handwritten letter $A$, the predictor will output simply a number that it finds to have to most similarities to the letter $A$. The reason for this is that the predictor is neither trained to identify letters nor to predict a category such as \enquote{invalid input}. \\
 
-\subsection*{From Multiclass to Binary: One-vs-All Encoding}
+\subsection{From Multiclass to Binary: One-vs-All Encoding}
 
 The basis of the multiclass kernel perceptron algorithm is the reduction of this multiclass classification problem to several binary classification problems - one for each of the ten digits - using the so-called \textit{one-vs-all encoding}. Applying one-vs-all encoding, the initial label $y \in \{0, 1, \dots, 9\}$ of each example in the training set $S$ is transformed into a binary label $z \in \{-1, 1\}$ by fixing a digit $a \in \{0, 1, \dots, 9\}$. $z$ is only $1$ for those examples for which $y=a$, otherwise $z$ is set to $-1$. In doing so, a new binary training set $S^{(a)}$ with examples of the form $(\vec{x}, z)$ is generated. As can be seen immediately, the transformation only regards the labels, but leaves the images $\vec{x}$ themselves unchanged \cite{multiclass2005}.
 
-\subsection*{Binary Kernel Perceptron Algorithm}
+\subsection{Binary Kernel Perceptron Algorithm}
 Now, for each of the ten binary training sets $S^{(a)}$ obtained via one-vs-all encoding, the goal is to train a binary classifier that predicts $\hat{z}=1$ when  a given image $\vec{x}$ shows the digit $a$ and $\hat{z}=-1$ when it shows another digit. For this purpose, the \textit{binary kernel perceptron algorithm} - that was first presented in 1984 by Aizerman et al. - can be applied \cite{kernel1964}, see Algorithm~\ref{alg:binary_kernel_perceptron}. 
 
 The binary kernel perceptron algorithm is an online learning algorithm as the training examples are processed sequentially. 
 
-In the version of the binary kernel perceptron algorithm that is applied in the present work, the training examples are processed in $n_{epochs}$ epochs. Each epoch is a loop over $n_{sample}$ training examples randomly drawn with replacement from the complete binary training set $S^{(a)}$.\\ 
+In the version of the binary kernel perceptron algorithm that is applied in the present work, the training examples are processed in $N_{epochs}$ epochs. Each epoch is a loop over $n_{sample}$ training examples randomly drawn with replacement from the complete binary training set $S^{(a)}$.\\ 
 
 The binary kernel perceptron trains a predictor of the form $h_{S^{(a)}}: \mathcal{X} \rightarrow \mathcal{Z}, \vec{x} \mapsto \hat{z}$, where $\mathcal{Z} = \{-1, 1\}$ is the binary label space. The predictor $h_{S^{(a)}}$ has the following form:
 \begin{align}\label{eq:bin_predictor}
@@ -29,9 +29,9 @@ The binary kernel perceptron algorithm stores the $\vec{\alpha}$ for all iterati
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output}
 \SetAlgoLined
-\Input{$n_{epoch}$, $n_{sample}$, $p$, $S^{(a)}$}
+\Input{$N_{epoch}$, $n_{sample}$, $p$, $S^{(a)}$}
  let $A = \emptyset$, $\vec{\alpha} = \vec{0}$\;
- \For{all $1, \dots, n_{epoch}$}{
+ \For{all $1, \dots, N_{epoch}$}{
  	let $T^{(a)} = \emptyset$\;
  	draw $n_{draw}$ examples from $S^{(a)}$ with replacement and store 		         	them in $T^{(a)}$ \;
 	\For{all $t = 1, \dots, n_{sample}$}{
@@ -47,9 +47,9 @@ The binary kernel perceptron algorithm stores the $\vec{\alpha}$ for all iterati
 \label{alg:binary_kernel_perceptron}
 \end{algorithm}
 
-\subsection*{Choice of Binary Predictors}
+\subsection{Choice of Binary Predictors}\label{subsec:choice}
 
-The remaining problem regards the choice of a predictor from the set $A$ of $\vec{\alpha}$-vectors. A straightforward approach is to simply take the last predictor $\vec{\alpha}_{fin}$ after $n_{epoch} \times n_{sample}$ iterations as in the original perceptron algorithm by Rosenblatt. In the present work, also two somewhat more sophisticated approaches are considered. \\ 
+The remaining problem regards the choice of a predictor from the set $A$ of $\vec{\alpha}$-vectors. A straightforward approach is to simply take the last predictor $\vec{\alpha}_{fin}$ after $N_{epoch} \times n_{sample}$ iterations as in the original perceptron algorithm by Rosenblatt. In the present work, also two somewhat more sophisticated approaches are considered. \\ 
 
 
 First, another possible choice is to compute the average $\langle \vec{\alpha} \rangle$ over all predictors in $A$. This leads to the following vector:
@@ -71,7 +71,7 @@ where $\mathbbm{1}$ is the indicator function. The binary training error is the 
 
 In the present work, the predictors are refered to as final predictor $\vec{\alpha}_{fin}$, average predictor $\langle \vec{\alpha} \rangle$, and minimizing predictor $\vec{\alpha}_{min}$.
 
-\subsection*{Multiclass Kernel Perceptron Algorithm}
+\subsection{Multiclass Kernel Perceptron Algorithm}
 
 The binary kernel perceptron algorithm just presented can be applied for all of the ten digits $a \in \{0, 1, \dots, 9\}$, using the corresponding binary training sets $S^{(a)}$. If a specific $\vec{\alpha}$-type is chosen, the result are ten binary predictors $h_{S^{(a)}}$ that predict $\hat{z} = 1$ when a given image $\vec{x}$ shows the handwritten digit $a$ and $\hat{z} = -1$ when not. \\
 
@@ -82,13 +82,13 @@ Finally, the multiclass classifier $f_S$ that predicts a digit from a given imag
 Note, that the functions $g_{S^{(a)}}$ inside the $\mathrm{sgn}$-function in Eq.~\ref{eq:bin_predictor} enter the computation of $f_S$, and not the binary predictors $g_{S^{(a)}}$ themselves.
 $f_S$ predicts the digit of the binary classifier that is most secure that the image $\vec{x}$ contains a certain digit by chosing the largest $g_{S^{(a)}}\in\mathbb{R}$. The algorithm is called \textit{multiclass kernel perceptron algorithm} as it makes use of the kernelized perceptron algorithm and expands it to predictions beyond the binary case\cite{multiclass2005}.
 
-\subsection*{Evaluation: Training and Test Error Rate}
+\subsection{Evaluation: Training and Test Error Rate}
 
 To evaluate the performance of a multiclass predictor $f_S$, two error rates have to be distinguished. 
 
 One the one hand, there is the \textit{training error rate} that is given by:
 \begin{align}\label{eq:training_error}
-	\ell_{S} = \frac{1}{|S|} \sum_{(\vec{x}, y) \in S} \ell(f_S(\vec{x}), y).
+	\ell_{S}(f_S) = \frac{1}{|S|} \sum_{(\vec{x}, y) \in S} \ell(f_S(\vec{x}), y).
 \end{align}
 Here, $\ell$ is the binary zero-one loss
 \begin{align*}
@@ -98,6 +98,6 @@ The training error rate is the relative number of images that the multiclass pre
 
 On the other hand, the \textit{test error rate}
 \begin{align}\label{eq:test_error}
-	\ell_{D} = \frac{1}{|D|} \sum_{(\vec{x}, y) \in D} \ell(f_S(\vec{x}), y)
+	\ell_{D}(f_S) = \frac{1}{|D|} \sum_{(\vec{x}, y) \in D} \ell(f_S(\vec{x}), y)
 \end{align}
 is the relative number of missclassified images $\vec{x}$ in the test set $D$. Note, that these images do not enter the training of $f_S$.

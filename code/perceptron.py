@@ -4,7 +4,8 @@ from data import make_binary
 
 class KernelPerceptron:
 
-    def __init__(self, feats_train, label_train):
+    def __init__(self, feats_train, label_train,
+                 feats_test, label_test):
         """
         Initialization of multiclass kernel perceptron.
         Class is written for application on recognition of handwritten digits.
@@ -16,6 +17,11 @@ class KernelPerceptron:
             and p the number of features.
         label_train : numpy.ndarray of shape (n, 1)
             Training label.
+        feats_test : numpy.ndarray of shape (m, p)
+            Test features, where m is the number of examples
+            and p the number of features.
+        label_test : numpy.ndarray of shape (n, 1)
+            Test label.
 
         Returns
         -------
@@ -25,7 +31,10 @@ class KernelPerceptron:
 
         self.feats_train = feats_train
         self.label_train = label_train
+        self.feats_test = feats_test
+        self.label_test = label_test
         self.n_train = len(label_train)  # total number of training examples
+        self.n_test = len(label_test)  # total number of test examples
 
         # possible digits
         self.digits = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
@@ -37,19 +46,14 @@ class KernelPerceptron:
 
         print("initialization of kernel perceptron successfull\n")
 
-    def reset(self, n_sample, deg, n_epoch_max,
-              output_bin=False, output_digit=1):
+    def reset(self, deg, output_bin=False, output_digit=1):
         """
-        Reset kernel perceptron for another run.
+        Reset kernel perceptron instance for a new run.
 
         Parameters
         ----------
-        n_sample : int
-            Number of training examples sampled with replacement in each epoch.
         deg : int
             Degree of polynomial kernel.
-        n_epoch_max : int
-            Maximum number of epochs that the kernel perceptron is used for.
         output_bin : bool
             Specifies if training error for a binary classifier is written
             to "results/bin_class.txt".
@@ -62,10 +66,8 @@ class KernelPerceptron:
 
         """
 
-        self.n_epoch = 1
-        self.n_epoch_max = n_epoch_max
-        self.n_sample = n_sample
         self.deg = deg
+        self.n_epoch = 1  # number of current epoch
 
         self.output_bin = output_bin
         self.output_digit = output_digit
@@ -78,9 +80,9 @@ class KernelPerceptron:
         # average multiclass predictor from all epochs
         self.alpha_avg_list = len(self.digits) * [np.zeros(self.n_train)]
 
-        # lists for on the fly computation of minimizing predictor
-        self.mistakes_min_list = len(self.digits) * [self.n_sample]
-        self.g_min_list = len(self.digits) * [np.zeros(self.n_sample)]
+        # lists for (on the fly) computation of minimizing predictor
+        self.mistakes_min_list = len(self.digits) * [self.n_train]
+        self.g_min_list = len(self.digits) * [np.zeros(self.n_train)]
 
     def compute_kernel(self, x1, x2):
         """
@@ -105,10 +107,10 @@ class KernelPerceptron:
         return kernel
 
     def propose_new_min(self, alpha_min_prop, alpha_min_current,
-                        g_min_current, mistakes_min_current, which,
-                        n_sample):
+                        g_min_current, mistakes_min_current, which):
         """
         Propose a new minimizing alpha classifier (w.r.t. training error).
+        For on the fly computation.
 
         Parameters
         ----------
@@ -124,10 +126,6 @@ class KernelPerceptron:
             Current total count of mistakes on training data.
         which : int
             Number of digit that is predicted.
-        n_sample : int
-            Number of training examples sampled with replacement in each epoch.
-            Here, number of training examples used
-            for computation of training error.
 
         Returns
         -------
@@ -142,18 +140,18 @@ class KernelPerceptron:
         S = np.argwhere(alpha_min_prop != alpha_min_current).flatten()
 
         # only index s gives a new contribution of proposed
-        g_min_prop = g_min_current + np.sum(
-            (alpha_min_prop[S] - alpha_min_current[S]) *
-            self.z[S, which] *
-            self.compute_kernel(
-                self.feats_train[S, :], self.feats_train[:self.n_sample, :]).T,
-            axis=1)
+        g_min_prop = g_min_current.copy()
+        g_min_prop +=\
+            np.sum((alpha_min_prop[S] - alpha_min_current[S]) *
+                   self.z[S, which] *
+                   self.kernel_train[S, :].T,
+                   axis=1)
 
         z_hat_min_prop = np.sign(g_min_prop)
 
         mistakes_min_prop = np.sum(
-            z_hat_min_prop != self.z[:self.n_sample, which])
-        np.sum(z_hat_min_prop != self.z[:self.n_sample, which])
+            z_hat_min_prop != self.z[:, which])
+        np.sum(z_hat_min_prop != self.z[:, which])
 
         return g_min_prop, mistakes_min_prop
 
@@ -185,25 +183,22 @@ class KernelPerceptron:
         if self.n_epoch == 1:
             file = open("./results/output_bin.txt", "w")
             file.write("deg = " + str(self.deg) +
-                       "\nlast two training errors of eachepoch correspond" +
+                       "\nlast two training errors of each epoch correspond" +
                        " to minimizing and average predictor" +
-                       "\niteration, training error\n")
+                       "\ncols: iteration, training error\n")
         else:
             file = open("./results/output_bin.txt", "a")
+            file.write("epoch nr. " + str(self.n_epoch) + "\n")
 
         # compute training error for every predictor in A and write to file
-        alpha_prev = np.zeros(self.n_train)
-        z_hat_in = 0
         for i, alpha in enumerate(A):
-            S = np.argwhere(alpha != alpha_prev).flatten()
-            z_hat_in = z_hat_in + np.sum((alpha[S] - alpha_prev[S]) * self.z[S, self.output_digit] *
-                                         self.compute_kernel(self.feats_train[S, :],
-                                                             self.feats_train[:self.n_sample, :]).T, axis=1)
-            z_hat = np.sign(z_hat_in)
+            S = np.argwhere(alpha != 0).flatten()
+            z_hat = np.sum(alpha[S] * self.z[S, self.output_digit] *
+                           self.kernel_train[S, :].T, axis=1)
+            z_hat = np.sign(z_hat)
             training_error = np.sum(
-                z_hat != self.z[:self.n_sample, self.output_digit]) / self.n_train
-            file.write(str(i + 1 + self.n_sample * (self.n_epoch - 1)
-                           ) + ", " + str(training_error) + "\n")
+                z_hat != self.z[:, self.output_digit]) / self.n_train
+            file.write(str(i) + ", " + str(training_error) + "\n")
 
         file.close()
 
@@ -211,7 +206,7 @@ class KernelPerceptron:
         """
         Train the kernel perceptron on the given training set.
         This method uses polynomial kernel.
-        Values of n_epoch and deg can be specified using the reset method.
+        Value deg can be specified using the reset method.
         The results are stored in the alpha lists.
 
         Parameters
@@ -223,6 +218,13 @@ class KernelPerceptron:
         None.
 
         """
+
+        # compute kernel matrix
+        if self.n_epoch == 1:
+            self.kernel_train = self.compute_kernel(
+                self.feats_train, self.feats_train)
+            self.kernel_test = self.compute_kernel(
+                self.feats_train, self.feats_test)
 
         print("***start training of multiclass classifier for deg = "
               + str(self.deg) + ", current epoch: "
@@ -237,7 +239,7 @@ class KernelPerceptron:
             alpha_min_temp = self.alpha_min_list[digit].copy()
             alpha_avg_temp = self.alpha_avg_list[digit].copy()
 
-            # for finding minimizing predictor
+            # for finding (on the fly) minimizing predictor
             mistakes_min_temp = self.mistakes_min_list[digit]
             g_min_temp = self.g_min_list[digit].copy()
 
@@ -247,17 +249,15 @@ class KernelPerceptron:
 
             # shuffle training indexes
             ind_train = np.arange(self.n_train)
-            ind_train = np.random.choice(
-                ind_train, self.n_sample, replace=False)
+            np.random.shuffle(ind_train)
 
             # loop over all examples in training data
             # (in order of shuffled indexes = random permutation)
             for t in ind_train:
                 # compute predicted label for training example with index t
                 S = np.argwhere(alpha_temp != 0).flatten()
-                z_hat_t = np.sum(alpha_temp[S] * self.z[S, digit] *
-                                 self.compute_kernel(
-                    self.feats_train[S, :], self.feats_train[t, :]))
+                z_hat_t = np.sum(
+                    alpha_temp[S] * self.z[S, digit] * self.kernel_train[S, t])
 
                 z_hat_t = np.sign(z_hat_t)
 
@@ -267,7 +267,7 @@ class KernelPerceptron:
                     # (in terms of training error)
                     g_min_prop, mistakes_min_prop = self.propose_new_min(
                         alpha_temp, alpha_min_temp,
-                        g_min_temp, mistakes_min_temp, digit, self.n_sample)
+                        g_min_temp, mistakes_min_temp, digit)
                     if mistakes_min_prop < mistakes_min_temp:
                         mistakes_min_temp = mistakes_min_prop
                         g_min_temp = g_min_prop.copy()
@@ -284,6 +284,7 @@ class KernelPerceptron:
             self.alpha_min_list[digit] = alpha_min_temp.copy()
             self.alpha_avg_list[digit] = alpha_avg_temp.copy()
 
+            # update lists for on the fly computation
             self.mistakes_min_list[digit] = mistakes_min_temp
             self.g_min_list[digit] = g_min_temp.copy()
 
@@ -291,7 +292,7 @@ class KernelPerceptron:
                 if digit == self.output_digit:
                     self.write_output_bin(
                         self.A, alpha_min_temp,
-                        alpha_avg_temp / (self.n_epoch * self.n_sample))
+                        alpha_avg_temp / (self.n_epoch * self.n_train))
 
         print("\n***training of multiclass classifier for deg = "
               + str(self.deg) + ", current epoch: "
@@ -305,9 +306,9 @@ class KernelPerceptron:
 
         Parameters
         ----------
-        feats_pred : numpy.ndarray of shape (n, p)
-            Prediction features, where n is the number of examples
-            and p the number of features.
+        feats_pred : str
+            Prediction features,.
+            Either "train" or "test".
         which_alpha : str
             Specifies type of predictor.
             Can be "standard", "min" or "avg".
@@ -319,7 +320,13 @@ class KernelPerceptron:
 
         """
 
-        n_pred = np.shape(feats_pred)[0]  # number of prediction examples
+        if feats_pred == "train":
+            n_pred = self.n_train
+            kernel = self.kernel_train
+        if feats_pred == "test":
+            n_pred = self.n_test
+            kernel = self.kernel_test
+
         label_pred = np.zeros(n_pred)
 
         z_hat = np.zeros([n_pred, len(self.digits)])
@@ -332,27 +339,25 @@ class KernelPerceptron:
                 alpha_temp = self.alpha_min_list[digit]
             if which_alpha == "avg":
                 alpha_temp = self.alpha_avg_list[digit] / \
-                    (self.n_epoch * self.n_sample)
+                    (self.n_epoch * self.n_train)
             S = np.argwhere(alpha_temp != 0).flatten()
-            z_hat[:, digit] = np.sum(alpha_temp[S] * self.z[S, digit] *
-                                     self.compute_kernel(
-                self.feats_train[S, :], feats_pred).T, axis=1)
+            z_hat[:, digit] +=\
+                np.sum(alpha_temp[S] * self.z[S, digit] *
+                       kernel[S, :].T, axis=1)
         label_pred = self.digits[np.argmax(z_hat, axis=1)]
 
         return label_pred
 
-    def compute_error(self, feats_pred, label_true, which_alpha,
+    def compute_error(self, feats_pred, which_alpha,
                       path_results="./results/", conf_mat=False):
         """
         Compute relative error (using zero-one loss) and confusion matrix.
 
         Parameters
         ----------
-        feats_pred : numpy.ndarray of shape (n, p)
-            Prediction features, where n is the number of examples
-            and p the number of features.
-        label_true : numpy.ndarray of shape (n, 1)
-            True label.
+        feats_pred : str
+            Prediction features,.
+            Either "train" or "test".
         which_alpha : str
             Specifies type of predictor.
             Can be "standard", "min" or "avg".
@@ -370,7 +375,12 @@ class KernelPerceptron:
 
         """
 
-        n_pred = np.shape(feats_pred)[0]  # number of prediction examples
+        if feats_pred == "train":
+            n_pred = self.n_train
+            label_true = self.label_train
+        if feats_pred == "test":
+            n_pred = self.n_test
+            label_true = self.label_test
 
         label_pred = self.predict(feats_pred, which_alpha)
 
@@ -387,6 +397,11 @@ class KernelPerceptron:
                        "_n_epoch=" + str(self.n_epoch - 1) + "_deg=" +
                        str(self.deg) + ".txt",
                        conf_mat.astype(int), fmt='%i', delimiter=",")
+
+        if feats_pred == "train":
+            label_true = self.label_train
+        if feats_pred == "test":
+            label_true = self.label_test
 
         mistakes = np.sum(label_pred != label_true)
         error = mistakes / n_pred
