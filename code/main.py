@@ -42,9 +42,6 @@ feats_test, label_test = data.load_data(path_test)
     train & test kernel perceptron
 """
 
-# set seed
-np.random.seed(171268)
-
 # initialize kernel perceptron instance
 kernel_perceptron = perceptron.KernelPerceptron(feats_train, label_train,
                                                 feats_test, label_test)
@@ -55,6 +52,10 @@ deg_list = np.arange(1, 7)
 
 # compute errors for different hyperparameters
 for deg in deg_list:
+
+    # set seed
+    np.random.seed(deg)
+
     # lists to store errors for three different classifier types
     training_error = []
     training_error_min = []
@@ -65,10 +66,6 @@ for deg in deg_list:
 
     # set degree of kernel perceptron instance
     kernel_perceptron.reset(deg)
-
-    # output binary training error in one particular case (for digit 9)
-    if deg == 4:
-        kernel_perceptron.reset(deg, True, 9)
 
     # run kernel perceptron and store training and test error after each epoch
     for j in range(n_epoch):

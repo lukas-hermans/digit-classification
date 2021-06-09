@@ -44,9 +44,14 @@ class KernelPerceptron:
         for digit in self.digits:
             self.z[:, digit] = make_binary(self.label_train, digit)
 
+        # binary test data for each digit
+        self.z_test = np.zeros([self.n_test, len(self.digits)])
+        for digit in self.digits:
+            self.z_test[:, digit] = make_binary(self.label_test, digit)
+
         print("initialization of kernel perceptron successfull\n")
 
-    def reset(self, deg, output_bin=False, output_digit=1):
+    def reset(self, deg):
         """
         Reset kernel perceptron instance for a new run.
 
@@ -54,11 +59,6 @@ class KernelPerceptron:
         ----------
         deg : int
             Degree of polynomial kernel.
-        output_bin : bool
-            Specifies if training error for a binary classifier is written
-            to "results/bin_class.txt".
-        output_digit : int
-            Specifies the digit for which the data is stored.
 
         Returns
         -------
@@ -69,14 +69,12 @@ class KernelPerceptron:
         self.deg = deg
         self.n_epoch = 1  # number of current epoch
 
-        self.output_bin = output_bin
-        self.output_digit = output_digit
-
         # alpha lists contain numpy.ndarray of shape (n, 1) for every digit
         # final multiclass predictor
         self.alpha_list = len(self.digits) * [np.zeros(self.n_train)]
         # minimizing multiclass predictor w.r.t. training error
         self.alpha_min_list = len(self.digits) * [np.zeros(self.n_train)]
+        self.alpha_prev_list = len(self.digits) * [np.zeros(self.n_train)]
         # average multiclass predictor from all epochs
         self.alpha_avg_list = len(self.digits) * [np.zeros(self.n_train)]
 
@@ -106,7 +104,7 @@ class KernelPerceptron:
 
         return kernel
 
-    def propose_new_min(self, alpha_min_prop, alpha_min_current,
+    def propose_new_min(self, alpha_min_prop, alpha_prev,
                         g_min_current, mistakes_min_current, which):
         """
         Propose a new minimizing alpha classifier (w.r.t. training error).
@@ -117,8 +115,8 @@ class KernelPerceptron:
         alpha_min_prop : numpy.ndarray of shape (n, 1)
             Proposed new minimizing alpha classifier.
             n is the number of training examples.
-        alpha_min_current : numpy.ndarray of shape (n, 1)
-            Current minimizing alpha classifier.
+        alpha_prev : numpy.ndarray of shape (n, 1)
+            Previous tested alpha classifier.
         g_min_current : numpy.ndarray of shape (epoch_size, 1)
             Current prediction for the n training features
             (inside sgn-function).
@@ -137,12 +135,12 @@ class KernelPerceptron:
         """
 
         # index of training example where proposed and current alpha differ
-        S = np.argwhere(alpha_min_prop != alpha_min_current).flatten()
+        S = np.argwhere(alpha_min_prop != alpha_prev).flatten()
 
         # only index s gives a new contribution of proposed
         g_min_prop = g_min_current.copy()
         g_min_prop +=\
-            np.sum((alpha_min_prop[S] - alpha_min_current[S]) *
+            np.sum((alpha_min_prop[S] - alpha_prev[S]) *
                    self.z[S, which] *
                    self.kernel_train[S, :].T,
                    axis=1)
@@ -155,16 +153,17 @@ class KernelPerceptron:
 
         return g_min_prop, mistakes_min_prop
 
-    def write_output_bin(self, A, alpha_min, alpha_avg):
+    def write_output_bin(self, which, alpha, alpha_min, alpha_avg):
         """
-        Compute the training error for every input predictor
-        and write to file "./results/output_bin.txt".
+        Compute the training and test error for every input predictor
+        and write to file "./results/bin_pred/output_bin.txt".
 
         Parameters
         ----------
-        A : list of numpy.ndarray of shape (n, 1)
-            List of predictors, where n is the number of training examples.
-            Usually, A contains n_epoch * n_sample predictors.
+        which : int
+            Which digit.
+        alpha_min : numpy.ndarray of shape (n, 1)
+            Final predictor.
         alpha_min : numpy.ndarray of shape (n, 1)
             Predictor that minimizes the training error.
         alpha_avg : numpy.ndarray of shape (n, 1)
@@ -176,29 +175,49 @@ class KernelPerceptron:
 
         """
 
-        A.append(alpha_min)
-        A.append(alpha_avg)
-
         # reset output file for first epoch
         if self.n_epoch == 1:
-            file = open("./results/output_bin.txt", "w")
-            file.write("deg = " + str(self.deg) +
-                       "\nlast two training errors of each epoch correspond" +
-                       " to minimizing and average predictor" +
-                       "\ncols: iteration, training error\n")
-        else:
-            file = open("./results/output_bin.txt", "a")
-            file.write("epoch nr. " + str(self.n_epoch) + "\n")
+            file = open("./results/bin_pred/digit=" +
+                        str(which) + "_deg=" +
+                        str(self.deg) + ".txt", "w")
+            file.write("tr. err. fin. pred., test err. fin. pred., " +
+                       "tr. err. min. pred., test err. min. pred., " +
+                       "tr. err. avg. pred., test  err. avg. pred.\n")
 
-        # compute training error for every predictor in A and write to file
-        for i, alpha in enumerate(A):
-            S = np.argwhere(alpha != 0).flatten()
-            z_hat = np.sum(alpha[S] * self.z[S, self.output_digit] *
+        else:
+            file = open("./results/bin_pred/digit=" +
+                        str(which) + "_deg=" +
+                        str(self.deg) + ".txt", "a")
+
+        # compute training and test error
+        # for every predictor in A and write to file
+        for i, al in enumerate([alpha, alpha_min, alpha_avg]):
+            S = np.argwhere(al != 0).flatten()
+
+            # training error
+            z_hat = np.sum(al[S] *
+                           self.z[S, which] *
                            self.kernel_train[S, :].T, axis=1)
             z_hat = np.sign(z_hat)
             training_error = np.sum(
-                z_hat != self.z[:, self.output_digit]) / self.n_train
-            file.write(str(i) + ", " + str(training_error) + "\n")
+                z_hat != self.z[:, which]) / self.n_train
+
+            file.write(str(training_error) + ", ")
+
+            # test error
+            z_hat = np.sum(al[S] *
+                           self.z[S, which] *
+                           self.kernel_test[S, :].T, axis=1)
+            z_hat = np.sign(z_hat)
+            test_error = np.sum(
+                z_hat != self.z_test[:, which]) / self.n_test
+
+            file.write(str(test_error))
+
+            if i < 2:
+                file.write(", ")
+            else:
+                file.write("\n")
 
         file.close()
 
@@ -237,15 +256,12 @@ class KernelPerceptron:
             # alpha vectors of current digit
             alpha_temp = self.alpha_list[digit].copy()
             alpha_min_temp = self.alpha_min_list[digit].copy()
+            alpha_prev_temp = self.alpha_prev_list[digit].copy()
             alpha_avg_temp = self.alpha_avg_list[digit].copy()
 
             # for finding (on the fly) minimizing predictor
             mistakes_min_temp = self.mistakes_min_list[digit]
             g_min_temp = self.g_min_list[digit].copy()
-
-            if self.output_bin:
-                self.A = []
-                self.A.append(alpha_temp)
 
             # shuffle training indexes
             ind_train = np.arange(self.n_train)
@@ -266,33 +282,30 @@ class KernelPerceptron:
                     # check if new alpha is better than old one
                     # (in terms of training error)
                     g_min_prop, mistakes_min_prop = self.propose_new_min(
-                        alpha_temp, alpha_min_temp,
+                        alpha_temp, alpha_prev_temp,
                         g_min_temp, mistakes_min_temp, digit)
+                    g_min_temp = g_min_prop.copy()
+                    alpha_prev_temp = alpha_temp.copy()
+
                     if mistakes_min_prop < mistakes_min_temp:
                         mistakes_min_temp = mistakes_min_prop
-                        g_min_temp = g_min_prop.copy()
                         alpha_min_temp = alpha_temp.copy()
 
                 alpha_avg_temp += alpha_temp
 
-                if self.output_bin:
-                    if digit == self.output_digit:
-                        self.A.append(alpha_temp.copy())
-
             # add alpha vectors for current digitto corresponding lists
             self.alpha_list[digit] = alpha_temp.copy()
             self.alpha_min_list[digit] = alpha_min_temp.copy()
+            self.alpha_prev_list[digit] = alpha_prev_temp.copy()
             self.alpha_avg_list[digit] = alpha_avg_temp.copy()
 
             # update lists for on the fly computation
             self.mistakes_min_list[digit] = mistakes_min_temp
             self.g_min_list[digit] = g_min_temp.copy()
 
-            if self.output_bin:
-                if digit == self.output_digit:
-                    self.write_output_bin(
-                        self.A, alpha_min_temp,
-                        alpha_avg_temp / (self.n_epoch * self.n_train))
+            self.write_output_bin(
+                digit, alpha_temp, alpha_min_temp,
+                alpha_avg_temp / (self.n_epoch * self.n_train))
 
         print("\n***training of multiclass classifier for deg = "
               + str(self.deg) + ", current epoch: "

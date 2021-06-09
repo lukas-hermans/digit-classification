@@ -1,46 +1,184 @@
-The scope of this Section is the training of several multiclass classifiers $f_S$ on the MNIST training set $S$ using the multiclass kernel perceptron algorithm as presented in Section~\ref{sec:theory} with different values of the hyperparameters $n_{epoch}$ (number of epochs) and $p$ (degree of polynomial kernel). For all hyperparameter combinations, multiclass classifiers $f_S$ applying the three different choices of retrieving binary predictors $h_{S^{(a)}}$ as described in Subsec.~\ref{subsec:choice} are trained on the training set $S$. Among all of the trained multiclass classifiers $f_S$, the ones obtaining the lowest test error rates are identified for each of the three different approaches to train binary predictors $h_{S^{(a)}}$.
+In this Section, the results of the application of the mulitclass kernel perceptron algorithm, presented in the theory section above, on the classification of handwritten digits are presented. In the present work, six multiclass predictors with polynomial kernels from degree $p=1$ up to degree $p=6$ are trained on the MNIST training set $S$. For all the six multiclass predictors, $N_{epoch} = 10$ cycles over random permutations of the training set $S$ are performed. As there are three different ways (see theory section) to retrieve binary predictors that underly the multiclass predictors, for each degree $p$ of the polynomial kernel, in effect three multiclass predictors are trained. Subsec.~\ref{subsec:bin_pred} regards the training of binary predictors for the three different approaches. Then, the combination of these binary predictors to obtain multiclass predictors according to the multiclass kernel perceptron algortihm is object of Subsec.~\ref{subsec:multi_pred}. Finally, in Subsec.~\ref{subsec:best_pred}, the obtained multiclass predictors are ranked according to their test error rates on the MNIST test set $D$. 
 
-\subsection{Data Stream: $n_{epoch}$ vs. $n_{sample}$}
-As the multiclass kernel percetron algortihm is an online learning algorithm, it processes training examples sequentially. The data stream of training examples is described by the number of epochs $N_{epoch}$ and by the number of samples $n_{sample}$ processed per epoch, see Alg.~\ref{alg:binary_kernel_perceptron}. Say, the number of training examples that should be processed by the multiclass kernel perceptron algorithm is fixed to $n_{proc}$. There are several combinations of $N_{epoch}$ and $N_{sample}$ that lead to the same number of processed training examples $n_{proc}$. Table~\ref{tab:data_stream} shows the training error rate $\ell_S(f_S)$ and test error rate $\ell_D(f_S)$ for the handwritten digit prediction using a multiclass predictor $f_S$ that is trained using the three different approaches to retrieve binary predictors, namely $\vec{\alpha}_{fin}$, $\langle \vec{\alpha} \rangle$, and $\vec{\alpha}_{min}$. The multiclass predictors $f_S$ are trained using a polynomial kernel of degree $p=4$ and $n_proc=20000$ processed training examples from the training set $S$. The Table reports four different choices of $N_{epoch}$ and $n_{sample}$ that realize $n_proc=20000$ with the corresponding training and test error rates for the three different binary predictor types. Each predictor is trained three times with the same settings to report statistical fluctations of the error rates due to the random draw of training examples in the implementation of the binary kernel perceptron algorithm. 
+\subsection{Binary Predictors}\label{subsec:bin_pred}
+As explained in Sec.~\ref{sec:theory}, the training of binary predictors is the foundation of the multiclass kernel perceptron. In the present work, the three different binary predictor types $\vec{\alpha}_{fin}$, $\langle \vec{\alpha} \rangle$, and $\vec{\alpha}_{min}$ are retrieved from the binary kernel perceptron alogrithm. For example, in Fig.~\ref{}, the training error rates for the binary prediction of digit $a=5$ using different degrees $p$ of the polynomial kernel are displayed. The corresponding test error rates are reported in Fig.~\ref{}. 
 
-\begin{table}
+\begin{figure}[h!]
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/training_digit=5_deg=1.pdf} 
+        \caption{$p = 1$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/training_digit=5_deg=2.pdf} 
+        \caption{$p = 2$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/training_digit=5_deg=3.pdf} 
+        \caption{$p = 3$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/training_digit=5_deg=4.pdf} 
+        \caption{$p = 4$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/training_digit=5_deg=5.pdf} 
+        \caption{$p = 5$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/training_digit=5_deg=6.pdf} 
+        \caption{$p = 6$}
+    \end{subfigure}
+    \caption{training error rates}
+\end{figure}
+
+\begin{figure}[h!]
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/test_digit=5_deg=1.pdf} 
+        \caption{$p = 1$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/test_digit=5_deg=2.pdf} 
+        \caption{$p = 2$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/test_digit=5_deg=3.pdf} 
+        \caption{$p = 3$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/test_digit=5_deg=4.pdf} 
+        \caption{$p = 4$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/test_digit=5_deg=5.pdf} 
+        \caption{$p = 5$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{bin_pred/test_digit=5_deg=6.pdf} 
+        \caption{$p = 6$}
+    \end{subfigure}
+    \caption{test error rates}
+\end{figure}
+
+\subsection{Multiclass Predictors}\label{subsec:multi_pred}
+
+\begin{figure}[h!]
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/training_deg=1.pdf} 
+        \caption{$p = 1$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/training_deg=2.pdf} 
+        \caption{$p = 2$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/training_deg=3.pdf} 
+        \caption{$p = 3$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/training_deg=4.pdf} 
+        \caption{$p = 4$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/training_deg=5.pdf} 
+        \caption{$p = 5$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/training_deg=6.pdf} 
+        \caption{$p = 6$}
+    \end{subfigure}
+    \caption{training error rates}
+\end{figure}
+
+\begin{figure}[h!]
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/test_deg=1.pdf} 
+        \caption{$p = 1$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/test_deg=2.pdf} 
+        \caption{$p = 2$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/test_deg=3.pdf} 
+        \caption{$p = 3$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/test_deg=4.pdf} 
+        \caption{$p = 4$}
+    \end{subfigure}
+    \par\bigskip
+        \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/test_deg=5.pdf} 
+        \caption{$p = 5$}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{performance/test_deg=6.pdf} 
+        \caption{$p = 6$}
+    \end{subfigure}
+    \caption{test error rates}
+\end{figure}
+
+\begin{figure}
 \centering
-\begin{tabular}{c | c || c | c | c | c}
- \multicolumn{2}{c}{} & \multicolumn{4}{c}{$n_{proc} = N_{epoch} \times n_{sample}$} \\
-binary predictor type & error rate & $1 \times 20000$ &  $2 \times 10000$ & $4 \times 5000$ & $8 \times 2500$ \\
-\hline
-\hline
-\multirow{6}{*}{$\vec{\alpha}_{fin}$} & \multirow{3}{*}{\shortstack{$\ell_S(f_S)$ \\ (training)}} & \SI{3.22}{\percent} & \SI{3.12}{\percent} & \SI{3.78}{\percent} & \SI{3.16}{\percent}\\
- &  & \SI{3.31}{\percent} & \SI{3.67}{\percent} & \SI{3.01}{\percent} & \SI{3.47}{\percent}\\
-& & \SI{3.38}{\percent} & \SI{3.21}{\percent} & \SI{3.08}{\percent} & \SI{3.48}{\percent}\\
-\cline{2-6}
- & \multirow{3}{*}{\shortstack{$\ell_D(f_S)$ \\ (test)}} & \SI{4.00}{\percent} & \SI{3.82}{\percent} & \SI{4.55}{\percent} & \SI{3.62}{\percent}\\
- &  & \SI{3.96}{\percent} & \SI{4.29}{\percent} & \SI{3.08}{\percent} & \SI{4.29}{\percent}\\
-& & \SI{3.69}{\percent} & \SI{3.88}{\percent} & \SI{3.67}{\percent} & \SI{4.32}{\percent}\\
-\hline
-\hline
-\multirow{6}{*}{$\langle\vec{\alpha}\rangle$} & \multirow{3}{*}{\shortstack{$\ell_S(f_S)$ \\ (training)}} & \SI{2.78}{\percent} & \SI{2.86}{\percent} & \SI{3.00}{\percent} & \SI{2.95}{\percent}\\
- &  & \SI{2.77}{\percent} & \SI{2.84}{\percent} & \SI{2.87}{\percent} & \SI{2.92}{\percent}\\
- &  & \SI{2.83}{\percent} & \SI{2.85}{\percent} & \SI{2.91}{\percent} & \SI{2.91}{\percent}\\
- \cline{2-6}
-& \multirow{3}{*}{\shortstack{$\ell_D(f_S)$ \\ (test)}} & \SI{3.30}{\percent} & \SI{3.58}{\percent} & \SI{3.55}{\percent} & \SI{3.50}{\percent}\\
-&  & \SI{3.31}{\percent} & \SI{3.21}{\percent} & \SI{3.30}{\percent} & \SI{3.39}{\percent}\\
-& & \SI{3.26}{\percent} & \SI{3.37}{\percent} & \SI{3.33}{\percent} & \SI{3.38}{\percent}\\
-\hline
-\hline
-\multirow{6}{*}{$\vec{\alpha}_{min}$} & \multirow{3}{*}{\shortstack{$\ell_S(f_S)$ \\ (training)}} & \SI{2.80}{\percent} & \SI{3.00}{\percent} & \SI{3.20}{\percent} & \SI{3.19}{\percent}\\
-& & \SI{2.83}{\percent} & \SI{3.03}{\percent} & \SI{2.92}{\percent} & \SI{3.30}{\percent}\\
-& & \SI{2.80}{\percent} & \SI{3.14}{\percent} & \SI{3.03}{\percent} & \SI{3.22}{\percent}\\
-\cline{2-6}
- & \multirow{3}{*}{\shortstack{$\ell_D(f_S)$ \\ (test)}} & \SI{3.60}{\percent} & \SI{3.97}{\percent} & \SI{4.01}{\percent} & \SI{3.91}{\percent}\\
- &  & \SI{3.48}{\percent} & \SI{3.66}{\percent} & \SI{3.51}{\percent} & \SI{3.71}{\percent}\\
-& & \SI{3.25}{\percent} & \SI{3.82}{\percent} & \SI{3.61}{\percent} & \SI{3.89}{\percent}\\
+	\begin{subfigure}[t]{0.49\textwidth}
+	\centering
+		\includegraphics[width=\linewidth]{conf_mat/predictor.pdf} 
+		\caption{final predictor $\vec{\alpha}_{fin}$}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.49\textwidth}
+	\centering
+		\includegraphics[width=\linewidth]{conf_mat/min_predictor.pdf} 
+		\caption{minimizing predictor $\vec{\alpha}_{min}$}
+	\end{subfigure}
+		\begin{subfigure}[t]{0.49\textwidth}
+	\centering
+		\includegraphics[width=\linewidth]{conf_mat/avg_predictor.pdf} 
+		\caption{minimizing predictor $\langle\vec{\alpha}\rangle$}
+	\end{subfigure}
+\end{figure}
 
-\end{tabular}
-\caption{This is a table.}
-\label{tab:data_stream}
-\end{table}
-
-\subsection{Example: Choice of Binary Predictors}
-
-\subsection{Search for Best Multiclass Classifier}
+\subsection{Minimizing the Test Error Rate}\label{subsec:best_pred}

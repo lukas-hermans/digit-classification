@@ -11,9 +11,9 @@
 \contentsline {subsection}{\numberline {3.5}Evaluation: Training and Test Error Rate}{6}{subsection.3.5}%
 \contentsline {section}{\numberline {4}Implementation \& Software}{7}{section.4}%
 \contentsline {section}{\numberline {5}Results}{7}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Data Stream: $n_{epoch}$ vs. $n_{sample}$}{7}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Example: Choice of Binary Predictors}{7}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Search for Best Multiclass Classifier}{7}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.1}Binary Predictors}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Multiclass Predictors}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Minimizing the Test Error Rate}{7}{subsection.5.3}%
 \contentsline {section}{\numberline {6}Discussion}{7}{section.6}%
 \contentsline {section}{\numberline {7}Conclusion \& Outlook}{7}{section.7}%
 \contentsline {section}{References}{8}{section.7}%
