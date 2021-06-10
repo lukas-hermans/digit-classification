@@ -13,7 +13,7 @@
 \contentsline {section}{\numberline {5}Results}{7}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Binary Predictors}{7}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}Multiclass Predictors}{10}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Minimizing the Test Error Rate}{10}{subsection.5.3}%
-\contentsline {section}{\numberline {6}Discussion}{10}{section.6}%
-\contentsline {section}{\numberline {7}Conclusion \& Outlook}{10}{section.7}%
-\contentsline {section}{References}{11}{section.7}%
+\contentsline {subsection}{\numberline {5.3}Minimizing the Test Error Rate}{13}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Discussion}{13}{section.6}%
+\contentsline {section}{\numberline {7}Conclusion \& Outlook}{15}{section.7}%
+\contentsline {section}{References}{16}{section.7}%

@@ -242,5 +242,213 @@
     \field{journaltitle}{Conrell Aeronautical Laboratory}
     \field{year}{1957}
   \endentry
+
+  \entry{dluncertainties2020}{article}{}
+    \name{author}{12}{}{%
+      {{hash=AM}{%
+         family={Abdar},
+         familyi={A\bibinitperiod},
+         given={Moloud},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=PF}{%
+         family={Pourpanah},
+         familyi={P\bibinitperiod},
+         given={Farhad},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=HS}{%
+         family={Hussain},
+         familyi={H\bibinitperiod},
+         given={Sadiq},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=RD}{%
+         family={Rezazadegan},
+         familyi={R\bibinitperiod},
+         given={Dana},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=LL}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Li},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=GM}{%
+         family={Ghavamzadeh},
+         familyi={G\bibinitperiod},
+         given={Mohammad},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=FP}{%
+         family={Fieguth},
+         familyi={F\bibinitperiod},
+         given={Paul},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=CX}{%
+         family={Cao},
+         familyi={C\bibinitperiod},
+         given={Xiaochun},
+         giveni={X\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Khosravi},
+         familyi={K\bibinitperiod},
+         given={Abbas},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=AUR}{%
+         family={Acharya},
+         familyi={A\bibinitperiod},
+         given={U.\bibnamedelima Rajendra},
+         giveni={U\bibinitperiod\bibinitdelim R\bibinitperiod},
+      }}%
+      {{hash=MV}{%
+         family={Makarenkov},
+         familyi={M\bibinitperiod},
+         given={Vladimir},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=NS}{%
+         family={Nahavandi},
+         familyi={N\bibinitperiod},
+         given={Saeid},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{AM+1}
+    \strng{fullhash}{AMPFHSRDLLGMFPCXKAAURMVNS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 2011.06225
+    \endverb
+    \field{title}{A Review of Uncertainty Quantification in Deep Learning:
+  Techniques, Applications and Challenges}
+    \verb{url}
+    \verb https://arxiv.org/abs/2011.06225
+    \endverb
+    \field{volume}{abs/2011.06225}
+    \field{journaltitle}{CoRR}
+    \field{eprinttype}{arXiv}
+    \field{year}{2020}
+  \endentry
+
+  \entry{mluncertainties2007}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=HB}{%
+         family={Hammer},
+         familyi={H\bibinitperiod},
+         given={Barbara},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=VT}{%
+         family={Villmann},
+         familyi={V\bibinitperiod},
+         given={Thomas},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{HBVT1}
+    \strng{fullhash}{HBVT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{pages}{79\bibrangedash 90}
+    \field{title}{How to process uncertainty in machine learning?}
+    \field{journaltitle}{ESANN 2007 Proceedings - 15th European Symposium on
+  Artificial Neural Networks}
+    \field{month}{01}
+    \field{year}{2007}
+  \endentry
+
+  \entry{bayesian2020}{article}{}
+    \name{author}{4}{}{%
+      {{hash=KY}{%
+         family={Kwon},
+         familyi={K\bibinitperiod},
+         given={Yongchan},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=WJH}{%
+         family={Won},
+         familyi={W\bibinitperiod},
+         given={Joong-Ho},
+         giveni={J\bibinithyphendelim H\bibinitperiod},
+      }}%
+      {{hash=KBJ}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Beom\bibnamedelima Joon},
+         giveni={B\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=PMC}{%
+         family={Paik},
+         familyi={P\bibinitperiod},
+         given={Myunghee\bibnamedelima Cho},
+         giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KY+1}
+    \strng{fullhash}{KYWJHKBJPMC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{doi}
+    \verb https://doi.org/10.1016/j.csda.2019.106816
+    \endverb
+    \field{issn}{0167-9473}
+    \field{pages}{106816}
+    \field{title}{Uncertainty quantification using Bayesian neural networks in
+  classification: Application to biomedical image segmentation}
+    \verb{url}
+    \verb https://www.sciencedirect.com/science/article/pii/S016794731930163X
+    \endverb
+    \field{volume}{142}
+    \field{journaltitle}{Computational Statistics \& Data Analysis}
+    \field{year}{2020}
+  \endentry
+
+  \entry{EMNIST2017}{misc}{}
+    \name{author}{4}{}{%
+      {{hash=CG}{%
+         family={Cohen},
+         familyi={C\bibinitperiod},
+         given={Gregory},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=AS}{%
+         family={Afshar},
+         familyi={A\bibinitperiod},
+         given={Saeed},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=TJ}{%
+         family={Tapson},
+         familyi={T\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=vSA}{%
+         prefix={van},
+         prefixi={v\bibinitperiod},
+         family={Schaik},
+         familyi={S\bibinitperiod},
+         given={André},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CG+1}
+    \strng{fullhash}{CGASTJSAv1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \verb{eprint}
+    \verb 1702.05373
+    \endverb
+    \field{title}{EMNIST: an extension of MNIST to handwritten letters}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.CV}
+    \field{year}{2017}
+  \endentry
 \enddatalist
 \endinput

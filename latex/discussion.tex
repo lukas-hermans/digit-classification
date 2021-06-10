@@ -1,1 +1,29 @@
-a
+The result of the implemention of the multiclass kernel perceptron algorithm for the identification of handwritten digits in the training set $D$ of the MNIST database lead to test error rates between \SI{1.58}{\percent} and \SI{1.54}{\percent}, as reported in the previous Section. As the MNIST database is a common benchmark dataset for machine learning algorithms for the recognition of images, there is plenty of literature regarding the test error rates obtained with other learning algortihms. In particular, the websites \url{http://yann.lecun.com/exdb/mnist/} and \url{https://paperswithcode.com/sota/image-classification-on-mnist} offer insightful overviews of the performance of different image recognition techniques on the MNIST database. \\
+
+Tab.~\ref{tab:comparison} compares the test error rates that were obtained by applying the multiclass kernel perceptron algorithm in the present work with results from other learning algorithms in the literature. The performance of the multiclass kernel perceptron algorithm is comparable to the test error rate of \SI{1.4}{\percent} obtained with the closely related support vector machine (SVM) with a gaussian kernel. The $K$-nearest-neighbors algorithm with a euclidean norm leads to a test error rate of \SI{5.0}{\percent}. The results for the SVM as well as for the KNN algorithm improve signficantly when applying various image preprocessing technqiues. The lowest test error rate that the author of the present paper aware of is \SI{0.16}{\percent} for the application of a rather complex ensemble of several convolutional neural networks in combination with different image preprocessing techniques. The reduction of the test error rate on the test set $D$ of the MNIST database is an ongoing field of research, where improved learning algorithms are developed and presented continually.\\
+
+\begin{table}
+\centering
+\begin{tabular}{c|c|c}
+learning algorithm & image preprocessing & test error rate [\%]\\
+\hline
+\hline
+KNN, euclidean norm (L2) & none & $5.0$\\
+KNN, euclidean norm (L2) & deskewing & $2.4$\\
+KNN, euclidean norm (L2) & deskewing, noise removal, blurring & $2.4$\\
+\textbf{multiclass kernel perceptron} & \textbf{none} & \boldmath$1.54$ \textbf{to} \boldmath$1.58$\\ 
+SVM, gaussian kernel & none & $1.4$\\
+SVM, polynomial kernel ($p=4$) & deskewing & $1.1$\\
+ensemble of CNNs & rotation, translation, random erasure & $0.16$
+\end{tabular}
+\caption{Comparison of the test error rate on the MNIST test set $D$ obtained by training the multiclass kernel perceptron algorithm with other image recognition techniques in the literature.}
+\label{tab:comparison}
+\end{table}
+
+The main advantage of the application of the multiclass kernel perceptron algorithm for the recognition of handwritten digits is that it is a sequential algorithm. In practice, this is important when the database of training images $S$ is growing as it might be the case for many applications, e.g. for self-driving vehicles.
+
+A major drawback of the multiclass kernel perceptron algorithm is that the obtained prediction for the label $\hat{y}$ of a given image $\vec{x}$ is outputed without any uncertainty estimation. This might be important for applications where decisions must be made on basis of a prediction. One possibilty to overcome this issue is to train the multiclass kernel perceptron (for the same hyperparameters $N_{epoch}$ and $p$) several times for different random permutations over the training examples in the training set $S$, such that an ensemble of multiclass predictors is obtained. Then, a prediction for the image $\vec{x}$ consists in fact of a distribution of predictions that give insights on the uncertainty of the prediction. 
+
+In the same way, uncertainties for the reported test error rates could be obtained. The uncertainties would allow a more meaningful comparisons between the multiclass predictors obatined for different realizations of the multiclass kernel perceptron algorithm as well as with other image recognition techniques.\\
+
+The determination of prediction uncertainties in machine learning is a subject of current research \cite{dluncertainties2020}\cite{mluncertainties2007}. The multiclass kernel perceptron algorithm might not be the best choice if predictions with reliable uncertainties are desired because the computational complexity of this algorithm increases significantly as the algorithm has to be trained completely several times. Other algorithms such as bayesian neural networks might be more suitable as the implement intrinsically a probabilistic component \cite{bayesian2020}.

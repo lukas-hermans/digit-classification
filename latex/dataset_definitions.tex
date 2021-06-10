@@ -21,7 +21,7 @@ In Figure~\ref{fig:plot_examples}, an examplary ensemble of ten different handwr
 The decompistion of the $70000$ examples into training and test examples can be described by two sets $S$ (\textit{training set}) and $D$ (\textit{test set}). The training set $S$ contains all training examples, while the test set $D$ contains all test examples. There is no intersection between the sets $S$ and $D$, such that the test set contains images that are different from those in the training set. This allows the evaluation of the performance of a classification algorithm that was trained on the training set $S$.
 \newpage
 
-Figure~\ref{fig:plot_hist_train} and Figure~\ref{fig:plot_hist_test} show histograms of the frequency, with which each digit occurs in the training and test set. Both the training and test set are balanced because the different digits appear with a similar frequency. In the following, this is important for the training of classifiers as there is no bias towards a certain digit. 
+Figure~\ref{fig:plot_hist} shows histograms of the frequency, with which each digit occurs in the training and test set. Both the training and test set are balanced because the different digits appear with a similar frequency.
 
 \begin{figure}[h!]
     \begin{subfigure}[t]{0.5\textwidth}
@@ -35,7 +35,8 @@ Figure~\ref{fig:plot_hist_train} and Figure~\ref{fig:plot_hist_test} show histog
         \includegraphics[width=\linewidth]{plot_hist_test.pdf} 
         \caption{test examples} \label{fig:plot_hist_test}
     \end{subfigure}
-    \caption{The histograms show, how often each digit occurs in (a) the training set $S$ and (b) the test set $D$. In both sets, all of the digits appear with a similar frequency, such that the training and test sets are balanced.}
+    \caption{The histograms show, how often each digit occurs in (a) the training set $S$ and (b) the test set $D$. Both sets are balanced as all of the ten digits appear with a similar frequency.}
+\label{fig:plot_hist}
 \end{figure}
 
 

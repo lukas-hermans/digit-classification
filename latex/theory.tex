@@ -9,7 +9,7 @@ Now, for each of the ten binary training sets $S^{(a)}$ obtained via one-vs-all 
 
 The binary kernel perceptron algorithm is an online learning algorithm as the training examples are processed sequentially. 
 
-In the version of the binary kernel perceptron algorithm that is applied in the present work, the training examples are repeatedly processed for $N_{epochs}$ epochs. Each epoch is a loop over a random permutation of the training examples in the training set $S^{(a)}$.\\ 
+In the version of the binary kernel perceptron algorithm that is applied in the present work, the training examples are repeatedly processed for $N_{epoch}$ epochs. Each epoch is a loop over a random permutation of the training examples in the training set $S^{(a)}$.\\ 
 
 The binary kernel perceptron trains a predictor of the form $h_{S^{(a)}}: \mathcal{X} \rightarrow \mathcal{Z}, \vec{x} \mapsto \hat{z}$, where $\mathcal{Z} = \{-1, 1\}$ is the binary label space. The predictor $h_{S^{(a)}}$ has the following form:
 \begin{align}\label{eq:bin_predictor}
@@ -19,7 +19,7 @@ The part inside the $\mathrm{sgn}$-function will be called $g_{S^{(a)}}$. In Eq.
 \begin{align*}
 	K_p(\vec{x_i}, \vec{x_j}) = (1 + \vec{x_i} \cdot \vec{x_j})^p,
 \end{align*}
-for all $\vec{x_i}, \vec{x_j} \in \mathcal{X}$. Other kernels are of course possible, but the present work focuses on polynomial kernels. The binary classifier in Eq.~\ref{eq:bin_predictor} corresponds to a decision surface of degree $p$ in the feature space $\mathcal{X}$. For $p=1$, the surface is a hyperplane that is adjusted using the binary training set $S^{(a)}$ in order to make predictions. This corresponds to the original perceptron algorithm \cite{perceptron1957}. Note, that the predictor $h_{S^{(a)}}$ depends only on a vector $\vec{\alpha}$ that - as can be seen in the algorithm panel below - is updated by the binary kernel perceptron algorithm only if a training example is missclassified. Thus, $\vec{\alpha}$ counts the number of missclassifications during the training process for all examples in the training set $S^{(a)}$. The dependence of $h_{S^{(a)}}$ on the specific $\vec{\alpha}$ is not explicitly denoted in order to maintain readability. However, from the context the particular vector $\vec{\alpha}$ that specifies the predictor should be obvious.\\ 
+for all $\vec{x_i}, \vec{x_j} \in \mathcal{X}$. Other kernels are of course possible, but the present work focuses on polynomial kernels. The binary classifier in Eq.~\ref{eq:bin_predictor} corresponds to a decision surface of degree $p$ in the feature space $\mathcal{X}$. For $p=1$, the surface is a hyperplane that is adjusted using the binary training set $S^{(a)}$ in order to make predictions. This corresponds to the original perceptron algorithm first introduced by Rosenblatt in $1957$ \cite{perceptron1957}. Note, that the predictor $h_{S^{(a)}}$ depends only on a vector $\vec{\alpha}$ that - as can be seen in the algorithm panel below - is updated by the binary kernel perceptron algorithm only if a training example is missclassified. Thus, $\vec{\alpha}$ counts the number of missclassifications during the training process for all examples in the training set $S^{(a)}$. The dependence of $h_{S^{(a)}}$ on the specific $\vec{\alpha}$ is not explicitly denoted in order to maintain readability. However, from the context the particular vector $\vec{\alpha}$ that specifies the predictor should be obvious.\\ 
 
 The binary kernel perceptron algorithm stores the $\vec{\alpha}$ for all iterations of the algorithm in a set $A$ and outputs these (technically, $A$ is a multiset as it can and most likely will contain the same $\vec{\alpha}$ more than once, when the prediction for an iteration is correct). As every $\vec{\alpha}$ defines a binary classifier $h_{S^{(a)}}$, the result of the algorithm is a large set $A$ of binary predictors. In the present paper, both the function $h_{S^{(a)}}$ and the corresponding vector $\vec{\alpha}$ are called binary predictor as both contain the same information.\\
 
@@ -76,7 +76,7 @@ Finally, the multiclass classifier $f_S$ that predicts a digit from a given imag
 \begin{align*}
 	f_S(\vec{x}) = \argmax_{a \in \{0, 1, \dots, 9\}} g_{S^{(a)}}(\vec{x}).
 \end{align*}
-Note, that the functions $g_{S^{(a)}}$ inside the $\mathrm{sgn}$-function in Eq.~\ref{eq:bin_predictor} enter the computation of $f_S$, and not the binary predictors $g_{S^{(a)}}$ themselves.
+Note, that the functions $g_{S^{(a)}}$ inside the $\mathrm{sgn}$-function in Eq.~\ref{eq:bin_predictor} enter the computation of $f_S$, and not the binary predictors $h_{S^{(a)}}$ themselves.
 $f_S$ predicts the digit of the binary classifier that is most secure that the image $\vec{x}$ contains a certain digit by chosing the largest $g_{S^{(a)}}\in\mathbb{R}$. The algorithm is called \textit{multiclass kernel perceptron algorithm} as it makes use of the kernelized perceptron algorithm and expands it to predictions beyond the binary case \cite{multiclass2005}. Depending on the choice of the used binary predictors $\vec{\alpha}$, three different realizations of the multiclass kernel perceptron algorithm are obtained. These are implemented in the present work.
 
 \subsection{Evaluation: Training and Test Error Rate}
@@ -89,7 +89,7 @@ One the one hand, there is the \textit{training error rate} that is given by:
 \end{align}
 Here, $\ell$ is the binary zero-one loss
 \begin{align*}
-	\ell(f_S(\vec{x}) = \mathbbm{1}(\hat{y} = y).
+	\ell(f_S(\vec{x})) = \mathbbm{1}(\hat{y} = y).
 \end{align*}
 The training error rate is the relative number of images that the multiclass predictor $f_S$ (that of course depends on the binary predictors choosen previously) missclassifies among all the images $\vec{x}$ in the training set $S$. It is the multiclass counterpart of the binary training error $\hat{\ell}_{S^{(a)}}$.
 
