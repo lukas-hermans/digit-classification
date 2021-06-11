@@ -17,9 +17,9 @@ The binary kernel perceptron trains a predictor of the form $h_{S^{(a)}}: \mathc
 \end{align}
 The part inside the $\mathrm{sgn}$-function will be called $g_{S^{(a)}}$. In Eq.~\ref{eq:bin_predictor}, $K_p$ is a polynomial kernel of degree $p$ that has the functional form
 \begin{align*}
-	K_p(\vec{x_i}, \vec{x_j}) = (1 + \vec{x_i} \cdot \vec{x_j})^p,
+	K_p(\vec{x}_i, \vec{x}_j) = (1 + \vec{x}_i \cdot \vec{x}_j)^p,
 \end{align*}
-for all $\vec{x_i}, \vec{x_j} \in \mathcal{X}$. Other kernels are of course possible, but the present work focuses on polynomial kernels. The binary classifier in Eq.~\ref{eq:bin_predictor} corresponds to a decision surface of degree $p$ in the feature space $\mathcal{X}$. For $p=1$, the surface is a hyperplane that is adjusted using the binary training set $S^{(a)}$ in order to make predictions. This corresponds to the original perceptron algorithm first introduced by Rosenblatt in $1957$ \cite{perceptron1957}. Note, that the predictor $h_{S^{(a)}}$ depends only on a vector $\vec{\alpha}$ that - as can be seen in the algorithm panel below - is updated by the binary kernel perceptron algorithm only if a training example is missclassified. Thus, $\vec{\alpha}$ counts the number of missclassifications during the training process for all examples in the training set $S^{(a)}$. The dependence of $h_{S^{(a)}}$ on the specific $\vec{\alpha}$ is not explicitly denoted in order to maintain readability. However, from the context the particular vector $\vec{\alpha}$ that specifies the predictor should be obvious.\\ 
+for all $\vec{x}_i, \vec{x}_j \in \mathcal{X}$. Other kernels are of course possible, but the present work focuses on polynomial kernels. The binary classifier in Eq.~\ref{eq:bin_predictor} corresponds to a decision surface of degree $p$ in the feature space $\mathcal{X}$. For $p=1$, the surface is a hyperplane that is adjusted using the binary training set $S^{(a)}$ in order to make predictions. This corresponds to the original perceptron algorithm first introduced by Rosenblatt in $1957$ \cite{perceptron1957}. Note, that the predictor $h_{S^{(a)}}$ depends only on a vector $\vec{\alpha}$ that - as can be seen in the algorithm panel below - is updated by the binary kernel perceptron algorithm only if a training example is missclassified. Thus, $\vec{\alpha}$ counts the number of missclassifications during the training process for all examples in the training set $S^{(a)}$. The dependence of $h_{S^{(a)}}$ on the specific $\vec{\alpha}$ is not explicitly denoted in order to maintain readability. However, from the context the particular vector $\vec{\alpha}$ that specifies the predictor should be obvious.\\ 
 
 The binary kernel perceptron algorithm stores the $\vec{\alpha}$ for all iterations of the algorithm in a set $A$ and outputs these (technically, $A$ is a multiset as it can and most likely will contain the same $\vec{\alpha}$ more than once, when the prediction for an iteration is correct). As every $\vec{\alpha}$ defines a binary classifier $h_{S^{(a)}}$, the result of the algorithm is a large set $A$ of binary predictors. In the present paper, both the function $h_{S^{(a)}}$ and the corresponding vector $\vec{\alpha}$ are called binary predictor as both contain the same information.\\
 
@@ -32,9 +32,9 @@ The binary kernel perceptron algorithm stores the $\vec{\alpha}$ for all iterati
  \For{all $1, \dots, N_{epoch}$}{
  	shuffle training examples in $S^{(a)}$ to obtain a new set $T^{(a)}$\;
 	\For{all $t = 1, \dots, |T^{(a)}|$}{
-		compute $\hat{z} = \mathrm{sgn}\left(\sum_{s: \alpha_s \neq 0} \alpha_s z_s 	     	K_p(\vec{x_s}, \vec{x_t})\right)$\;
+		compute $\hat{z} = \mathrm{sgn}\left(\sum_{s: \alpha_s \neq 0} \alpha_s z_s 	     	K_p(\vec{x}_s, \vec{x}_t)\right)$\;
 	\If{$\hat{z} \neq z_t$}{
-		$\alpha_i \leftarrow \alpha_i + 1$ where $i$ is the index of example 		$(\vec{x_t}, z_t)$ in $S^{(a)}$\;
+		$\alpha_i \leftarrow \alpha_i + 1$ where $i$ is the index of example 		$(\vec{x}_t, z_t)$ in $S^{(a)}$\;
 	}
 	store $\vec{\alpha}$ in $A$\;
 	}
